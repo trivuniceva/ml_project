@@ -40,4 +40,5 @@ data.dropna(inplace=True)
 
 # TODO: popuni vrednosti SimpleImputer opcija2
 
+data.dropna(inplace=True)
 
