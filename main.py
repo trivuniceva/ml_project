@@ -74,3 +74,19 @@ print(f'Mean Squared Error: {mse}')
 print(f'Root Mean Squared Error: {rmse}')
 print(f'Mean Absolute Error: {mae}')
 print(f'R2 Score: {r2}')
+
+# Primer kako koristiti model za predikciju broja pregleda
+new_video_features = {
+    'diggCount': 500,
+    'shareCount': 100,
+    'commentCount': 50,
+    'likes_per_view': 0.05,
+    'comments_per_view': 0.01,
+    'shares_per_view': 0.02
+}
+
+new_video_df = pd.DataFrame([new_video_features])
+predicted_views = best_model.predict(new_video_df)
+print(f'Predicted number of views: {predicted_views[0]}')
+original_views = scaler.inverse_transform(predicted_views.reshape(-1, 1))
+print(f'Predicted number of views (original scale): {original_views[0][0]}')
