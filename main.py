@@ -42,3 +42,8 @@ data.dropna(inplace=True)
 
 data.dropna(inplace=True)
 
+X = data[['diggCount', 'shareCount', 'commentCount', 'likes_per_view', 'comments_per_view', 'shares_per_view']]
+y = data['playCount']
+
+
+
