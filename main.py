@@ -1,12 +1,16 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, OneHotEncoder
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import GridSearchCV
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
 
 
 data_path = 'data/metadata.csv'
@@ -32,6 +36,9 @@ data = data.drop(columns=['videoUrlNoWaterMark', 'videoApiUrlNoWaterMark', 'musi
 
 scaler = MinMaxScaler()
 data[['diggCount', 'shareCount', 'playCount', 'commentCount']] = scaler.fit_transform(data[['diggCount', 'shareCount', 'playCount', 'commentCount']])
+numerical_columns = ['diggCount', 'shareCount', 'playCount', 'commentCount']
+
+
 
 # Kreiranje dodatnih karakteristika
 data['likes_per_view'] = data['diggCount'] / data['playCount']
@@ -40,8 +47,14 @@ data['shares_per_view'] = data['shareCount'] / data['playCount']
 
 data.dropna(inplace=True)
 
-X = data[['diggCount', 'shareCount', 'commentCount', 'likes_per_view', 'comments_per_view', 'shares_per_view']]
-y = data['playCount']
+numerical_columns = data.select_dtypes(include=[np.number]).columns
+correlation_matrix = data[numerical_columns].corr()
+
+plt.figure(figsize=(12, 10))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Correlation Matrix')
+plt.show()
+
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -53,6 +66,19 @@ param_grid = PendingDeprecationWarnin = {
     'min_samples_split': [2, 5, 10],
     'min_samples_leaf': [1, 2, 4]
 }
+
+X_transformed = preprocessor.fit_transform(X)
+
+correlation_matrix = pd.DataFrame(X_transformed.toarray()).corr()
+
+# Plot the correlation matrix
+plt.figure(figsize=(12, 10))
+sns.heatmap(correlation_matrix, annot=False, cmap='coolwarm', fmt=".2f")
+plt.title('Correlation Matrix')
+plt.show()
+
+
+
 
 model = RandomForestRegressor(random_state=42)
 # model.fit(X_train, y_train)
