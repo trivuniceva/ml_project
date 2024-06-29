@@ -6,6 +6,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.model_selection import GridSearchCV
 
 
 data_path = 'data/metadata.csv'
@@ -44,10 +45,25 @@ y = data['playCount']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-model = RandomForestRegressor(n_estimators=100, random_state=42)
-model.fit(X_train, y_train)
 
-y_pred = model.predict(X_test)
+param_grid = PendingDeprecationWarnin = {
+    'n_estimators': [100, 200, 300],
+    'max_features': ['auto', 'sqrt', 'log2'],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
+
+model = RandomForestRegressor(random_state=42)
+# model.fit(X_train, y_train)
+
+grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, n_jobs=-1, verbose=2)
+grid_search.fit(X_train, y_train)
+print(grid_search.best_params_)
+best_model = grid_search.best_estimator_
+
+# y_pred = model.predict(X_test)
+y_pred = best_model.predict(X_test)
 
 mse = mean_squared_error(y_test, y_pred)
 rmse = np.sqrt(mse)
