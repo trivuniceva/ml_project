@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import KNNImputer
+from sklearn.preprocessing import StandardScaler
+
 
 
 def read_clean_data():
@@ -36,8 +38,10 @@ def read_clean_data():
     # num_rows_with_nan = X.isnull().sum()
     # print(num_rows_with_nan)
 
-    scaler = MinMaxScaler()
+    # scaler = MinMaxScaler()
+    scaler = StandardScaler()
     data[['diggCount', 'shareCount', 'playCount', 'commentCount']] = scaler.fit_transform(data[['diggCount', 'shareCount', 'playCount', 'commentCount']])
+    
 
     # Kreiranje dodatnih karakteristika
     data['likes_per_view'] = data['diggCount'] / data['playCount']
@@ -84,25 +88,11 @@ def preprocessing(data):
     # X = data[numerical_features + categorical_features + textual_features]
     # y = data['playCount']
 
-    # X = data[['diggCount', 'shareCount', 'commentCount', 'likes_per_view', 'comments_per_view', 'shares_per_view']]
+    X = data[['diggCount', 'shareCount', 'commentCount', 'likes_per_view', 'comments_per_view', 'shares_per_view']]
     
-    features = ['authorMeta.fans', 'authorMeta.heart', 'diggCount', 'shareCount', 'commentCount']
-    X = data[features]
+    # features = ['authorMeta.fans', 'authorMeta.heart', 'diggCount', 'shareCount', 'commentCount']
+    # X = data[features]
     y = data['playCount']
-
-    # numerical_features = ['authorMeta.fans', 'authorMeta.heart', 'diggCount', 'shareCount', 'commentCount', 'likes_per_view', 'comments_per_view', 'shares_per_view']
-    # categorical_features = ['authorMeta.verified', 'musicMeta.musicOriginal', 'downloaded']
-    # textual_features = ['text']
-
-    # preprocessor = ColumnTransformer(
-    #     transformers=[
-    #         ('num', MinMaxScaler(), numerical_features),
-    #         ('cat', OneHotEncoder(), categorical_features),
-    #         ('text', TfidfVectorizer(max_features=1000), 'text')  # TF-IDF vectorizer for text data
-    #     ])
-
-    # X = data[numerical_features + categorical_features + textual_features]
-    # y = data['playCount']
 
     return X, y
 
