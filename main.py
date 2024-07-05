@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import KNNImputer
+from sklearn.preprocessing import StandardScaler
+
 
 
 def read_clean_data():
@@ -36,8 +38,10 @@ def read_clean_data():
     # num_rows_with_nan = X.isnull().sum()
     # print(num_rows_with_nan)
 
-    scaler = MinMaxScaler()
+    # scaler = MinMaxScaler()
+    scaler = StandardScaler()
     data[['diggCount', 'shareCount', 'playCount', 'commentCount']] = scaler.fit_transform(data[['diggCount', 'shareCount', 'playCount', 'commentCount']])
+    
 
     # Kreiranje dodatnih karakteristika
     data['likes_per_view'] = data['diggCount'] / data['playCount']
