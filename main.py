@@ -88,25 +88,11 @@ def preprocessing(data):
     # X = data[numerical_features + categorical_features + textual_features]
     # y = data['playCount']
 
-    # X = data[['diggCount', 'shareCount', 'commentCount', 'likes_per_view', 'comments_per_view', 'shares_per_view']]
+    X = data[['diggCount', 'shareCount', 'commentCount', 'likes_per_view', 'comments_per_view', 'shares_per_view']]
     
-    features = ['authorMeta.fans', 'authorMeta.heart', 'diggCount', 'shareCount', 'commentCount']
-    X = data[features]
+    # features = ['authorMeta.fans', 'authorMeta.heart', 'diggCount', 'shareCount', 'commentCount']
+    # X = data[features]
     y = data['playCount']
-
-    # numerical_features = ['authorMeta.fans', 'authorMeta.heart', 'diggCount', 'shareCount', 'commentCount', 'likes_per_view', 'comments_per_view', 'shares_per_view']
-    # categorical_features = ['authorMeta.verified', 'musicMeta.musicOriginal', 'downloaded']
-    # textual_features = ['text']
-
-    # preprocessor = ColumnTransformer(
-    #     transformers=[
-    #         ('num', MinMaxScaler(), numerical_features),
-    #         ('cat', OneHotEncoder(), categorical_features),
-    #         ('text', TfidfVectorizer(max_features=1000), 'text')  # TF-IDF vectorizer for text data
-    #     ])
-
-    # X = data[numerical_features + categorical_features + textual_features]
-    # y = data['playCount']
 
     return X, y
 
