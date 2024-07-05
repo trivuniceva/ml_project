@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.compose import ColumnTransformer
@@ -116,7 +116,7 @@ def train_data(data):
 
     param_grid = PendingDeprecationWarnin = {
         'n_estimators': [100, 200, 300],
-        'max_features': ['sqrt', 'log2', None],
+        'max_features': ['auto', 'sqrt', 'log2'],
         'max_depth': [None, 10, 20, 30],
         'min_samples_split': [2, 5, 10],
         'min_samples_leaf': [1, 2, 4]
@@ -134,22 +134,11 @@ def train_data(data):
     model = RandomForestRegressor(random_state=42)
     # model.fit(X_train, y_train)
 
-    # grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, n_jobs=-1, verbose=2)
-    # grid_search.fit(X_train, y_train)
-    # print(grid_search.best_params_)
+    print("grid.....")
+    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, n_jobs=-1, verbose=1)
+    grid_search.fit(X_train, y_train)
     
-    # best_model = grid_search.best_estimator_
-
-    # y_pred = best_model.predict(X_test)
-
-    print("random.....")
-
-    random_search = RandomizedSearchCV(estimator=model, param_distributions=param_grid, n_iter=100,
-                                   cv=5, n_jobs=-1, random_state=42, verbose=1)
-
-    random_search.fit(X_train, y_train)
-
-    best_model = random_search.best_estimator_
+    best_model = grid_search.best_estimator_
 
     y_pred = best_model.predict(X_test)
 
